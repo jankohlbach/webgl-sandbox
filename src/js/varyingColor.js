@@ -1,13 +1,12 @@
-import { setup, prepareDimensionsAndColor, randomInRange } from './helper';
+import { setup, prepareDimensionsAndColor } from './helper';
 import { setRectangle } from './shapes';
 
-import vShaderSource from '../shader/vertex.glsl';
-import fShaderSource from '../shader/fragment.glsl';
+import vShaderSource from '../shader/vertexVaryingColor.glsl';
+import fShaderSource from '../shader/fragmentVaryingColor.glsl';
 
 const { canvas, gl, program } = setup(vShaderSource, fShaderSource);
 
 const resolutionUniformLocation = gl.getUniformLocation(program, 'u_resolution');
-const colorUniformLocation = gl.getUniformLocation(program, 'u_color');
 
 const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
 
@@ -29,16 +28,10 @@ prepareDimensionsAndColor(canvas, gl, program);
 
 gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
-for (let i = 0; i < 50; i += 1) {
-  setRectangle(
-    gl, randomInRange(0, 400), randomInRange(0, 300), randomInRange(0, 400), randomInRange(0, 300),
-  );
+setRectangle(gl, 0, 0, gl.canvas.width, gl.canvas.height);
 
-  gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
+const primitiveType = gl.TRIANGLES;
+const offsetDraw = 0;
+const count = 6;
 
-  const primitiveType = gl.TRIANGLES;
-  const offsetDraw = 0;
-  const count = 6;
-
-  gl.drawArrays(primitiveType, offsetDraw, count);
-}
+gl.drawArrays(primitiveType, offsetDraw, count);
